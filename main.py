@@ -58,9 +58,9 @@ def analyze_responses():
 
     #st.session_state.dat_str = res_df.shape
 
-    res_df.to_csv('responses/data.txt', sep='\t')
+    res_df.to_csv('response/data.txt', sep='\t')
 
-    documents = SimpleDirectoryReader('responses').load_data()
+    documents = SimpleDirectoryReader('response').load_data()
 
     # Chunking and Embedding of the chunks.
     index = GPTVectorStoreIndex.from_documents(documents)

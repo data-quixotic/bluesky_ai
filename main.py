@@ -115,10 +115,10 @@ for message in st.session_state.messages:
 
 if prompt := st.chat_input("AI SYSTEM: How can I assist you?"):
     st.session_state.messages.append({"role": "user", "content": prompt})
-    with st.chat_message("user", avatar="astronaut_icon.png"):
+    with st.chat_message("user"):
         st.markdown(prompt)
 
-    with st.chat_message("assistant", avatar="malbot_icon2.jpg"):
+    with st.chat_message("assistant"):
         message_placeholder = st.empty()
         full_response = ""
         for response in openai.ChatCompletion.create(

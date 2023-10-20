@@ -3,3 +3,4 @@ streamlit~=1.25.0
 pandas~=1.5.3
 pandas_gbq~=0.19.2
 llama-index~=0.7.13
+pydantic==1.10.9

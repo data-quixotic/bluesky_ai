@@ -2,7 +2,6 @@ import os
 import openai
 import streamlit as st
 from google.oauth2 import service_account
-from google.cloud import bigquery
 import pandas as pd
 import pandas_gbq
 import uuid
@@ -44,7 +43,7 @@ def save_convo():
 
 def analyze_responses():
 
-    st.session_state["dat_str"] = ""
+    st.session_state["dat_str"] = "Hello Prof X. Here are the topics\nwhere students most frequently\nask for help: "
     st.session_state["response_summary"] = ""
 
     sql = '''
@@ -58,9 +57,9 @@ def analyze_responses():
 
     #st.session_state.dat_str = res_df.shape
 
-    res_df.to_csv('response/data.txt', sep='\t')
+    res_df.to_csv('responses/data.txt', sep='\t')
 
-    documents = SimpleDirectoryReader('response').load_data()
+    documents = SimpleDirectoryReader('responses').load_data()
 
     # Chunking and Embedding of the chunks.
     index = GPTVectorStoreIndex.from_documents(documents)
@@ -68,8 +67,8 @@ def analyze_responses():
     # Run the query engine on a user question.
     response = query_engine.query("""
     This document contains student queries for assistance to an AI assistant. To help the instructor identify
-    the most common knowledge gaps revealed by their discussions, briefly summarize the top five discussion topics
-    with some indication of their frequency.""")
+    the most common knowledge gaps revealed by their discussions, briefly summarize the top three discussion topics
+    with and indicate the frequency with which they are discussed.""")
 
     st.session_state.response_summary = response
 
@@ -101,7 +100,7 @@ if "messages" not in st.session_state:
                                                  Your role as the AI system is to help answer user inquiries 
                                                  to help them accomplish their task. However, your knowledge is limited
                                                  to the topics of linear regression, data analysis, and Mars. For 
-                                                 questions about any other topic, you should respond "That question is 
+                                                 questions about any other topic, respond "That question is 
                                                  outside my capabilities." Also, if you don't know an answer to a
                                                  question just say you don't know and don't make anything up.  
                                                  """})
@@ -115,10 +114,10 @@ for message in st.session_state.messages:
 
 if prompt := st.chat_input("AI SYSTEM: How can I assist you?"):
     st.session_state.messages.append({"role": "user", "content": prompt})
-    with st.chat_message("user"):
+    with st.chat_message("user", avatar="astronaut_icon.png"):
         st.markdown(prompt)
 
-    with st.chat_message("assistant"):
+    with st.chat_message("assistant", avatar="malbot_icon2.jpg"):
         message_placeholder = st.empty()
         full_response = ""
         for response in openai.ChatCompletion.create(
